@@ -13,6 +13,7 @@ import torch
 import os
 import numpy as np
 from PIL import Image
+import json
 from transformers import ViTFeatureExtractor, ViTModel
 from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
 from glob import glob
@@ -48,19 +49,23 @@ def get_feature_vector(image_path):
     
 # --------------------------------------------------------
 
-# Function to create a feature vector database from existing images
 def create_feature_database(database_folder):
-    print(f"----------------- Creating Feature Database from {database_folder} -----------------------")
-    database = []
-    # Loop through all images in the database folder
-    image_paths = glob(os.path.join(database_folder, "*.jpg")) + glob(os.path.join(database_folder, "*.jpeg")) + glob(os.path.join(database_folder, "*.png"))
-    for path in image_paths:
-        print(f"----------------- Processing {os.path.basename(path)} -----------------")
-        feature_vector = get_feature_vector(path)
-        if feature_vector is not None:
-            database.append({'path': path, 'features': feature_vector})
-    print(f"----------------- Feature Database Created Successfully. {len(database)} images processed -----------------")
-    return database
+    # Define the path for the JSON cache file
+    cache_file = os.path.join(database_folder, 'db_feature_vector.json')
+
+    # Check if the cache file already exists
+    if os.path.exists(cache_file):
+        print(f"----------------- Loading Feature Database from {cache_file} -----------------------")
+        with open(cache_file, 'r') as f:
+            database = json.load(f)
+        print(f"----------------- Loaded {len(database)} feature vectors from cache -----------------")
+        # Convert features back to numpy arrays
+        for item in database:
+            item['features'] = np.array(item['features'])
+        return database
+    else:
+        print(f"----------------- Error: No feature cache file found at {cache_file} -----------------")
+        return []
 
 # --------------------------------------------------------------------
 
