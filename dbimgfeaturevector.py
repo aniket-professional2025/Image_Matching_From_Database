@@ -7,7 +7,7 @@ from main import get_feature_vector
 # Define a function to calculate the fewature vectors of database images
 def create_database_image_feature_vector(database_folder):
     # Define the path for the JSON cache file
-    cache_file = os.path.join(database_folder, "db_feature_vector.json")
+    cache_file = os.path.join(database_folder, "db_feature_vector_51.json")
 
     # Check if the cache file already exists or not
     if os.path.exists(cache_file):

@@ -51,7 +51,7 @@ def get_feature_vector(image_path):
 
 def create_feature_database(database_folder):
     # Define the path for the JSON cache file
-    cache_file = os.path.join(database_folder, 'db_feature_vector.json')
+    cache_file = os.path.join(database_folder, 'db_feature_vector_51.json')
 
     # Check if the cache file already exists
     if os.path.exists(cache_file):
